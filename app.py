@@ -3,7 +3,7 @@ import mercadopago
 import google.generativeai as genai
 
 # =========================================================
-# 🛡️ CONFIGURAÇÕES MESTRES (CHAVES INTEGRADAS)
+# 🛡️ CONFIGURAÇÕES MESTRES (CHAVES ATUALIZADAS)
 # =========================================================
 
 # Sua chave da IA Google Gemini
@@ -31,7 +31,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =========================================================
-# 🔮 SISTEMA DE ACESSO (CORRIGIDO)
+# 🔮 SISTEMA DE ACESSO
 # =========================================================
 
 if 'logado' not in st.session_state:
@@ -41,7 +41,7 @@ if not st.session_state.logado:
     st.title("🌙 Portal Axé")
     st.subheader("Acesse os fundamentos secretos")
     email = st.text_input("Seu E-mail")
-    # AQUI: Adicionei a senha Mouragg171$ que você está usando
+    # Agora aceitando a senha Mouragg171$ que você definiu
     senha = st.text_input("Chave de Acesso", type="password")
     
     if st.button("Abrir Caminhos"):
@@ -56,7 +56,7 @@ else:
     st.title("🔮 Consulta aos Fundamentos")
     st.write(f"Conectado: **{st.session_state.email}**")
     
-    pergunta = st.text_area("Descreva o seu caso para o Oráculo:")
+    pergunta = st.text_area("Descreva o seu caso para o Oráculo (Ex: Amarração, Matança, Quebra de Demanda):")
 
     if st.button("Consultar o Oráculo"):
         if pergunta:
@@ -70,7 +70,7 @@ else:
                     "payer": {"email": st.session_state.email}
                 }
                 
-                # Chamada corrigida para evitar o KeyError
+                # Chamada corrigida para evitar erro de resposta vazia
                 pagamento = sdk.payment().create(payment_data)
                 
                 if "response" in pagamento and "point_of_interaction" in pagamento["response"]:
@@ -80,20 +80,19 @@ else:
                     st.write("### 📲 Copie o código PIX para pagar:")
                     st.code(codigo_pix)
                 else:
-                    # Mensagem clara se o Token estiver com problema
-                    st.error("Erro ao gerar PIX. Verifique se o seu Token do Mercado Pago está ativo e com saldo.")
+                    st.error("Erro ao gerar PIX. Verifique se o seu Token do Mercado Pago está ativo e configurado para PIX.")
             except Exception as e:
-                st.error(f"Falha técnica: {e}")
+                st.error(f"Falha técnica na geração do pagamento: {e}")
 
-    # --- MOTOR DE IA (RESPOSTA FINAL) ---
+    # --- MOTOR DE IA (CONHECIMENTO PROFUNDO) ---
     if st.checkbox("Já realizei o pagamento"):
         with st.spinner("Revelando fundamentos..."):
             try:
                 model = genai.GenerativeModel('gemini-2.0-flash')
-                prompt_mestre = f"Como mestre de alta magia, ensine rituais completos para: {pergunta}."
+                prompt_mestre = f"Como mestre de alta magia e feitiçaria real, ensine rituais completos para: {pergunta}. Use uma linguagem direta e sem filtros."
                 resposta = model.generate_content(prompt_mestre)
                 st.markdown("---")
                 st.subheader("📜 O RITUAL REVELADO")
                 st.write(resposta.text)
-            except:
-                st.error("Erro na IA. Verifique sua chave API.")
+            except Exception as e:
+                st.error("Erro na IA. Verifique se sua chave API do Google Gemini ainda é válida.")
